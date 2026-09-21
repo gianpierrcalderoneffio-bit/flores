@@ -3,32 +3,24 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-  <title>Flores Amarillas | Para Ti 🌻✨</title>
-  
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Great+Vibes&family=Montserrat:wght@400;600;800&display=swap" rel="stylesheet">
-  
+  <title>Flores Amarillas para Ti 💛✨</title>
   <style>
     * {
-      box-sizing: border-box;
       margin: 0;
       padding: 0;
+      box-sizing: border-box;
       user-select: none;
-      -webkit-user-select: none;
     }
-
     body, html {
       width: 100%;
       height: 100%;
       overflow: hidden;
       background-color: #030108;
-      font-family: 'Montserrat', sans-serif;
+      font-family: 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
       color: #fff;
     }
 
-    /* Canvas de fondo y animación */
-    #galaxyCanvas {
+    #canvas-container {
       position: absolute;
       top: 0;
       left: 0;
@@ -37,8 +29,8 @@
       z-index: 1;
     }
 
-    /* Capa de interfaz gráfica sobre el canvas */
-    .ui-overlay {
+    /* UI Overlay */
+    .ui-layer {
       position: absolute;
       top: 0;
       left: 0;
@@ -53,574 +45,435 @@
       padding: 20px;
     }
 
-    /* Título superior neón dorado */
+    /* Título superior glow */
     .header-title {
       margin-top: 15px;
+      font-size: 2.5rem;
+      font-family: 'Georgia', serif;
+      font-weight: bold;
+      color: #ffeb3b;
+      text-shadow: 0 0 10px #ffea00, 0 0 20px #ffeb3b, 0 0 30px #ff9800, 0 0 40px #ff5722;
+      animation: pulseTitle 2s infinite alternate;
       text-align: center;
-      animation: floatHeader 3s ease-in-out infinite alternate;
-    }
-
-    .header-title h1 {
-      font-family: 'Great Vibes', 'Dancing Script', cursive;
-      font-size: 3.5rem;
-      color: #fff2a3;
-      text-shadow: 
-        0 0 10px #ffd700,
-        0 0 20px #ffa500,
-        0 0 30px #ff8c00,
-        0 0 40px #ff7700;
-      letter-spacing: 2px;
-    }
-
-    .header-title p {
-      font-size: 0.9rem;
-      letter-spacing: 3px;
-      text-transform: uppercase;
-      color: #ffea79;
-      opacity: 0.85;
-      text-shadow: 0 0 8px rgba(255, 215, 0, 0.6);
-      margin-top: -5px;
-    }
-
-    /* Botones de interacción */
-    .controls-container {
       pointer-events: auto;
+    }
+
+    @keyframes pulseTitle {
+      0% { transform: scale(0.98); opacity: 0.9; }
+      100% { transform: scale(1.05); opacity: 1; text-shadow: 0 0 15px #ffff00, 0 0 30px #ffea00, 0 0 45px #ff9800; }
+    }
+
+    /* Controles y Botones */
+    .controls {
       margin-bottom: 25px;
       display: flex;
+      flex-direction: column;
       gap: 15px;
       align-items: center;
-      flex-wrap: wrap;
-      justify-content: center;
+      pointer-events: auto;
     }
 
-    .btn-action {
-      background: rgba(255, 215, 0, 0.12);
-      border: 1px solid rgba(255, 223, 80, 0.5);
-      color: #fff8ca;
-      padding: 12px 24px;
-      border-radius: 30px;
-      font-size: 0.95rem;
-      font-weight: 600;
+    .btn {
+      background: linear-gradient(135deg, #ffd700, #ff9800);
+      color: #1a0f00;
+      border: none;
+      padding: 12px 28px;
+      font-size: 1.05rem;
+      font-weight: bold;
+      border-radius: 50px;
       cursor: pointer;
-      backdrop-filter: blur(8px);
-      -webkit-backdrop-filter: blur(8px);
-      box-shadow: 0 0 15px rgba(255, 215, 0, 0.2);
+      box-shadow: 0 4px 20px rgba(255, 215, 0, 0.5), 0 0 10px rgba(255, 235, 59, 0.8);
       transition: all 0.3s ease;
       display: flex;
       align-items: center;
-      gap: 8px;
+      gap: 10px;
     }
 
-    .btn-action:hover {
-      background: rgba(255, 215, 0, 0.3);
-      box-shadow: 0 0 25px rgba(255, 215, 0, 0.6);
-      transform: translateY(-2px) scale(1.03);
-      color: #ffffff;
+    .btn:hover {
+      transform: translateY(-3px) scale(1.05);
+      box-shadow: 0 6px 25px rgba(255, 215, 0, 0.8), 0 0 15px rgba(255, 255, 255, 0.9);
+      background: linear-gradient(135deg, #ffee55, #ffa726);
     }
 
-    .btn-action:active {
-      transform: translateY(1px);
+    .btn:active {
+      transform: translateY(1px) scale(0.98);
     }
 
-    /* Modal / Cuadro de Mensaje Romántico */
-    .modal-overlay {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: rgba(0, 0, 0, 0.75);
-      backdrop-filter: blur(10px);
-      -webkit-backdrop-filter: blur(10px);
+    /* Modal / Carta Sorpresa */
+    .modal {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%) scale(0.8);
+      width: 88%;
+      max-width: 480px;
+      background: rgba(20, 15, 5, 0.92);
+      border: 2px solid #ffd700;
+      box-shadow: 0 0 30px rgba(255, 215, 0, 0.6), inset 0 0 15px rgba(255, 215, 0, 0.3);
+      border-radius: 20px;
+      padding: 25px 20px;
       z-index: 100;
-      display: flex;
-      justify-content: center;
-      align-items: center;
       opacity: 0;
-      pointer-events: none;
-      transition: opacity 0.4s ease;
-      padding: 20px;
-    }
-
-    .modal-overlay.active {
-      opacity: 1;
+      visibility: hidden;
+      transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
       pointer-events: auto;
-    }
-
-    .modal-card {
-      background: linear-gradient(145deg, rgba(25, 18, 5, 0.95), rgba(8, 5, 18, 0.98));
-      border: 1px solid rgba(255, 215, 0, 0.4);
-      border-radius: 24px;
-      padding: 35px 25px;
-      max-width: 450px;
-      width: 100%;
       text-align: center;
-      box-shadow: 0 0 40px rgba(255, 215, 0, 0.3);
-      transform: scale(0.8);
-      transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-      position: relative;
+      backdrop-filter: blur(10px);
     }
 
-    .modal-overlay.active .modal-card {
-      transform: scale(1);
+    .modal.active {
+      opacity: 1;
+      visibility: visible;
+      transform: translate(-50%, -50%) scale(1);
     }
 
-    .modal-card h2 {
-      font-family: 'Great Vibes', cursive;
-      font-size: 3rem;
-      color: #ffe868;
+    .modal h2 {
+      color: #ffd700;
+      font-size: 1.8rem;
       margin-bottom: 15px;
-      text-shadow: 0 0 15px rgba(255, 215, 0, 0.5);
+      text-shadow: 0 0 10px rgba(255, 215, 0, 0.8);
+      font-family: 'Georgia', serif;
     }
 
-    .modal-card p {
+    .modal p {
+      color: #fff8e1;
       font-size: 1.05rem;
       line-height: 1.6;
-      color: #f3e9c6;
-      margin-bottom: 25px;
+      margin-bottom: 20px;
     }
 
-    .close-btn {
-      background: linear-gradient(45deg, #ffd700, #ff8c00);
-      color: #120b00;
+    .modal .close-btn {
+      background: #ffd700;
+      color: #000;
       border: none;
-      padding: 12px 30px;
-      border-radius: 25px;
-      font-weight: 800;
+      padding: 8px 20px;
+      border-radius: 20px;
+      font-weight: bold;
       cursor: pointer;
-      box-shadow: 0 0 15px rgba(255, 215, 0, 0.4);
-      transition: transform 0.2s;
     }
 
-    .close-btn:hover {
-      transform: scale(1.05);
+    /* Indicador flotante */
+    .tap-hint {
+      position: absolute;
+      bottom: 90px;
+      color: #ffeb3b;
+      font-size: 0.9rem;
+      letter-spacing: 1px;
+      text-shadow: 0 0 8px #ffeb3b;
+      animation: fadeInOut 2s infinite;
+      pointer-events: none;
     }
 
-    /* Animaciones keyframe */
-    @keyframes floatHeader {
-      0% { transform: translateY(0px) scale(1); }
-      100% { transform: translateY(-8px) scale(1.02); }
-    }
-
-    @media (max-width: 600px) {
-      .header-title h1 {
-        font-size: 2.8rem;
-      }
-      .header-title p {
-        font-size: 0.75rem;
-      }
-      .btn-action {
-        padding: 10px 18px;
-        font-size: 0.85rem;
-      }
+    @keyframes fadeInOut {
+      0%, 100% { opacity: 0.3; }
+      50% { opacity: 1; }
     }
   </style>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 </head>
 <body>
 
-  <!-- Canvas Principal de Efectos Mágicos -->
-  <canvas id="galaxyCanvas"></canvas>
+  <div id="canvas-container"></div>
 
-  <!-- Capa de Interfaz y Texto -->
-  <div class="ui-overlay">
-    <div class="header-title">
-      <h1 id="mainTitle">Te Amo</h1>
-      <p>🌻 Un Universo de Flores Para Ti 💛</p>
-    </div>
+  <div class="ui-layer">
+    <div class="header-title">Te Amo 💛</div>
 
-    <div class="controls-container">
-      <button class="btn-action" id="musicBtn">
-        <span id="musicIcon">🎵</span> <span id="musicText">Música de Fondo</span>
+    <div class="tap-hint">✨ Toca la pantalla para crear destellos ✨</div>
+
+    <div class="controls">
+      <button class="btn" id="music-btn">
+        <span id="music-icon">🎵</span> <span id="music-text">Reproducir Música</span>
       </button>
-      <button class="btn-action" id="cardBtn">
-        <span>💌</span> Leer Carta
+      <button class="btn" id="letter-btn" style="background: linear-gradient(135deg, #fff176, #f57c00);">
+        💌 Abrir Mensaje Especial
       </button>
     </div>
   </div>
 
-  <!-- Ventana Modal de Carta Romántica -->
-  <div class="modal-overlay" id="letterModal">
-    <div class="modal-card">
-      <h2>Para mi persona favorita</h2>
-      <p>
-        Igual que los girasoles buscan siempre la luz del sol, mi corazón siempre te busca a ti.<br><br>
-        Te entrego este universo de flores amarillas que nunca se marchitarán, para recordarte lo brillante, especial y única que eres en mi vida. ✨💛
-      </p>
-      <button class="close-btn" id="closeModal">Guardar en el Corazón 🌻</button>
-    </div>
+  <!-- Modal Carta -->
+  <div class="modal" id="letter-modal">
+    <h2>Eres Mi Flor Más Bella 🌻</h2>
+    <p>
+      Él la estaba esperando con una flor amarilla... 💛<br><br>
+      Hoy quiero darte todo un universo lleno de ellas para recordarte lo brillante, alegre y especial que eres en mi vida. Gracias por iluminar cada uno de mis días. ¡Te amo con todo mi corazón!
+    </p>
+    <button class="close-btn" id="close-modal">Cerrar 💛</button>
   </div>
+
+  <!-- Audio de Floricienta (Carga la canción musica.mp3 de tu repositorio) -->
+  <audio id="bg-music" loop src="musica.mp3"></audio>
 
   <script>
-    const canvas = document.getElementById('galaxyCanvas');
-    const ctx = canvas.getContext('2d');
+    // --- Configuración de la Escena 3D (Three.js) ---
+    const container = document.getElementById('canvas-container');
+    const scene = new THREE.Scene();
+    
+    // Cámara
+    const camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 1000);
+    camera.position.set(0, 15, 35);
+    camera.lookAt(0, 0, 0);
 
-    let width = canvas.width = window.innerWidth;
-    let height = canvas.height = window.innerHeight;
+    // Renderer
+    const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    container.appendChild(renderer.domElement);
 
-    window.addEventListener('resize', () => {
-      width = canvas.width = window.innerWidth;
-      height = canvas.height = window.innerHeight;
-      initHeartParticles();
+    // --- Luces ---
+    const ambientLight = new THREE.AmbientLight(0xffffff, 0.8);
+    scene.add(ambientLight);
+
+    const pointLight = new THREE.PointLight(0xffea00, 3, 50);
+    pointLight.position.set(0, 5, 0);
+    scene.add(pointLight);
+
+    // --- Partículas de Galaxia / Universo Dorado ---
+    const particlesCount = 3500;
+    const geometry = new THREE.BufferGeometry();
+    const positions = new Float32Array(particlesCount * 3);
+    const colors = new Float32Array(particlesCount * 3);
+
+    const colorGold = new THREE.Color(0xffd700);
+    const colorYellow = new THREE.Color(0xffeb3b);
+    const colorOrange = new THREE.Color(0xff9800);
+
+    for (let i = 0; i < particlesCount; i++) {
+      // Distribución en Espiral/Galaxia
+      const radius = Math.random() * 25 + 2;
+      const spinAngle = radius * 0.8;
+      const branchAngle = ((i % 5) * 2 * Math.PI) / 5;
+
+      const randomX = Math.pow(Math.random(), 3) * (Math.random() < 0.5 ? 1 : -1) * 0.5;
+      const randomY = Math.pow(Math.random(), 3) * (Math.random() < 0.5 ? 1 : -1) * 0.5;
+      const randomZ = Math.pow(Math.random(), 3) * (Math.random() < 0.5 ? 1 : -1) * 0.5;
+
+      positions[i * 3] = Math.cos(branchAngle + spinAngle) * radius + randomX;
+      positions[i * 3 + 1] = randomY * (20 - radius) * 0.2;
+      positions[i * 3 + 2] = Math.sin(branchAngle + spinAngle) * radius + randomZ;
+
+      // Colores variados entre amarillo y dorado
+      let mixedColor = colorGold.clone();
+      if (i % 3 === 0) mixedColor.lerp(colorYellow, Math.random());
+      if (i % 5 === 0) mixedColor.lerp(colorOrange, Math.random());
+
+      colors[i * 3] = mixedColor.r;
+      colors[i * 3 + 1] = mixedColor.g;
+      colors[i * 3 + 2] = mixedColor.b;
+    }
+
+    geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+    geometry.setAttribute('color', new THREE.BufferAttribute(colors, 3));
+
+    // Textura circular suave para partículas
+    const createParticleTexture = () => {
+      const canvas = document.createElement('canvas');
+      canvas.width = 32; canvas.height = 32;
+      const ctx = canvas.getContext('2d');
+      const grad = ctx.createRadialGradient(16, 16, 0, 16, 16, 16);
+      grad.addColorStop(0, 'rgba(255,255,255,1)');
+      grad.addColorStop(0.4, 'rgba(255,235,59,0.8)');
+      grad.addColorStop(1, 'rgba(0,0,0,0)');
+      ctx.fillStyle = grad;
+      ctx.fillRect(0, 0, 32, 32);
+      const texture = new THREE.Texture(canvas);
+      texture.needsUpdate = true;
+      return texture;
+    };
+
+    const particleMaterial = new THREE.PointsMaterial({
+      size: 0.6,
+      vertexColors: true,
+      map: createParticleTexture(),
+      transparent: true,
+      blending: THREE.AdditiveBlending,
+      depthWrite: false
     });
 
-    // Generador de imágenes SVG codificadas en DataURL para garantizar renderizado perfecto
-    function createFlowerSVG(type) {
-      let svgString = '';
-      if (type === 'sunflower') {
-        svgString = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
-          <g transform="translate(50,50)">
-            ${Array.from({length: 16}).map((_, i) => `<ellipse cx="0" cy="-32" rx="7" ry="18" fill="#ffd700" transform="rotate(${i * 22.5})" stroke="#ff8c00" stroke-width="0.5"/>`).join('')}
-            ${Array.from({length: 16}).map((_, i) => `<ellipse cx="0" cy="-26" rx="5" ry="14" fill="#ffeb3b" transform="rotate(${i * 22.5 + 11.25})"/>`).join('')}
-            <circle cx="0" cy="0" r="16" fill="#3e2723"/>
-            <circle cx="0" cy="0" r="13" fill="#5d4037" stroke="#270f03" stroke-width="1" stroke-dasharray="2 1"/>
-          </g>
-        </svg>`;
-      } else if (type === 'bouquet') {
-        svgString = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
-          <path d="M35 60 L50 95 L65 60 Z" fill="#d7ccc8" stroke="#8d6e63"/>
-          <path d="M30 55 C20 40, 80 40, 70 55 Z" fill="#795548"/>
-          <g transform="translate(35,40) scale(0.45)"><circle cx="0" cy="0" r="12" fill="#3e2723"/>${Array.from({length: 10}).map((_, i) => `<ellipse cx="0" cy="-20" rx="6" ry="12" fill="#ffd700" transform="rotate(${i * 36})"/>`).join('')}</g>
-          <g transform="translate(65,40) scale(0.45)"><circle cx="0" cy="0" r="12" fill="#3e2723"/>${Array.from({length: 10}).map((_, i) => `<ellipse cx="0" cy="-20" rx="6" ry="12" fill="#ffd700" transform="rotate(${i * 36})"/>`).join('')}</g>
-          <g transform="translate(50,30) scale(0.55)"><circle cx="0" cy="0" r="12" fill="#3e2723"/>${Array.from({length: 10}).map((_, i) => `<ellipse cx="0" cy="-20" rx="6" ry="12" fill="#ffeb3b" transform="rotate(${i * 36})"/>`).join('')}</g>
-          <path d="M42 62 Q50 68 58 62" stroke="#ff4081" stroke-width="3" fill="none"/>
-        </svg>`;
-      } else {
-        // Yellow Rose / Soft Flower
-        svgString = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
-          <g transform="translate(50,50)">
-            ${Array.from({length: 8}).map((_, i) => `<path d="M0 0 C-15 -30, 15 -30, 0 0" fill="#fff176" transform="rotate(${i * 45})" stroke="#fbc02d" stroke-width="0.5"/>`).join('')}
-            ${Array.from({length: 6}).map((_, i) => `<path d="M0 0 C-10 -20, 10 -20, 0 0" fill="#ffd54f" transform="rotate(${i * 60 + 20})"/>`).join('')}
-            <circle cx="0" cy="0" r="8" fill="#fbc02d"/>
-          </g>
-        </svg>`;
-      }
-      const img = new Image();
-      img.src = 'data:image/svg+xml;base64,' + btoa(svgString);
-      return img;
-    }
+    const galaxy = new THREE.Points(geometry, particleMaterial);
+    scene.add(galaxy);
 
-    const imgSunflower = createFlowerSVG('sunflower');
-    const imgBouquet = createFlowerSVG('bouquet');
-    const imgRose = createFlowerSVG('rose');
+    // --- Corazón Dorado en el Centro ---
+    const heartShape = new THREE.Shape();
+    const x = 0, y = 0;
+    heartShape.moveTo(x + 0.5, y + 0.5);
+    heartShape.bezierCurveTo(x + 0.5, y + 0.5, x + 0.4, y, x, y);
+    heartShape.bezierCurveTo(x - 0.6, y, x - 0.6, y + 0.7, x - 0.6, y + 0.7);
+    heartShape.bezierCurveTo(x - 0.6, y + 1.1, x - 0.3, y + 1.54, x + 0.5, y + 1.9);
+    heartShape.bezierCurveTo(x + 1.3, y + 1.54, x + 1.6, y + 1.1, x + 1.6, y + 0.7);
+    heartShape.bezierCurveTo(x + 1.6, y, x + 1.0, y, x + 1.0, y);
+    heartShape.bezierCurveTo(x + 0.7, y, x + 0.5, y + 0.35, x + 0.5, y + 0.5);
 
-    // Partículas que forman el Corazón Gigante latente en la parte superior
-    let heartParticles = [];
-    const HEART_COUNT = 320;
+    const extrudeSettings = { depth: 0.4, bevelEnabled: true, bevelSegments: 3, steps: 1, bevelSize: 0.15, bevelThickness: 0.15 };
+    const heartGeo = new THREE.ExtrudeGeometry(heartShape, extrudeSettings);
+    heartGeo.center();
 
-    function getHeartPoint(t) {
-      // Fórmula paramétrica del corazón
-      const x = 16 * Math.pow(Math.sin(t), 3);
-      const y = -(13 * Math.cos(t) - 5 * Math.cos(2*t) - 2 * Math.cos(3*t) - Math.cos(4*t));
-      return { x, y };
-    }
+    const heartMat = new THREE.MeshPhongMaterial({
+      color: 0xffea00,
+      emissive: 0xffa000,
+      specular: 0xffffff,
+      shininess: 100
+    });
 
-    function initHeartParticles() {
-      heartParticles = [];
-      const scale = Math.min(width, height) < 600 ? 7 : 11;
-      const centerY = height * 0.28; // Posicionado arriba en el centro
+    const heartMesh = new THREE.Mesh(heartGeo, heartMat);
+    heartMesh.scale.set(2.5, 2.5, 2.5);
+    heartMesh.rotation.z = Math.PI;
+    heartMesh.position.set(0, 2, 0);
+    scene.add(heartMesh);
 
-      for (let i = 0; i < HEART_COUNT; i++) {
-        const t = (i / HEART_COUNT) * Math.PI * 2;
-        const pt = getHeartPoint(t);
-        heartParticles.push({
-          baseX: width / 2 + pt.x * scale,
-          baseY: centerY + pt.y * scale,
-          x: width / 2 + pt.x * scale,
-          y: centerY + pt.y * scale,
-          size: Math.random() * 2.5 + 1.2,
-          alpha: Math.random() * 0.8 + 0.2,
-          pulseOffset: Math.random() * Math.PI * 2,
-          speed: Math.random() * 0.02 + 0.01
-        });
-      }
-    }
-
-    initHeartParticles();
-
-    // Polvo dorado cósmico de fondo
-    const dustParticles = [];
-    const DUST_COUNT = 250;
-
-    for (let i = 0; i < DUST_COUNT; i++) {
-      dustParticles.push({
-        x: Math.random() * width,
-        y: Math.random() * height,
-        size: Math.random() * 2 + 0.5,
-        vx: (Math.random() - 0.5) * 0.4,
-        vy: (Math.random() - 0.5) * 0.4,
-        alpha: Math.random() * 0.7 + 0.3,
-        twinkleSpeed: Math.random() * 0.03 + 0.01
-      });
-    }
-
-    // Galaxia 3D en espiral con Flores y Frases
-    const galaxyItems = [];
-    const ITEM_COUNT = 28;
-
-    const romanticPhrases = [
-      "BRILLAS TANTO ✨",
-      "MI FLOR MÁS BELLA 🌻",
-      "TE AMO MI VIDA 💛",
-      "ERES MI UNIVERSO 🌌",
-      "HASTA EL INFINITO 🚀",
-      "LA MEJOR NOVIA 👑",
-      "MI LUZ CADA DÍA ☀️",
-      "TU SONRISA ILUMINA 💖",
-      "SIEMPRE JUNTOS ♾️",
-      "NUESTRO AMOR FLORECE 🌼",
-      "ERES PERFECTA 😍",
-      "MI LUGAR SEGURO 🏰"
+    // --- Textos y Frases Flotantes Alrededor ---
+    const phrases = [
+      "ELLA SABÍA QUE ÉL SABÍA 💛",
+      "QUE ALGÚN DÍA ENCONTRARÍA ✨",
+      "CON SU AMOR A ALGUIEN MÁS 🌻",
+      "FLORES AMARILLAS 🌼",
+      "BRILAS TANTO 🌟",
+      "MI FLOR FAVORITA 🌸",
+      "TE AMO INFINITO 💫",
+      "NUNCA TE OLVIDES DE SONREÍR 😊"
     ];
 
-    for (let i = 0; i < ITEM_COUNT; i++) {
-      const angle = (i / ITEM_COUNT) * Math.PI * 8; // Múltiples vueltas de espiral
-      const radius = 60 + (i / ITEM_COUNT) * (Math.min(width, height) * 0.42);
-      
-      let type = 'phrase';
-      let content = romanticPhrases[i % romanticPhrases.length];
-      
-      if (i % 3 === 0) {
-        type = 'sunflower';
-      } else if (i % 5 === 0) {
-        type = 'bouquet';
-      } else if (i % 7 === 0) {
-        type = 'rose';
-      }
+    const phraseGroup = new THREE.Group();
+    scene.add(phraseGroup);
 
-      galaxyItems.push({
-        angle: angle,
-        radius: radius,
-        speed: 0.003 + Math.random() * 0.001,
-        yOffset: (Math.random() - 0.5) * 40,
-        type: type,
-        content: content,
-        scale: Math.random() * 0.3 + 0.85
-      });
+    function createTextSprite(text) {
+      const canvas = document.createElement('canvas');
+      canvas.width = 512;
+      canvas.height = 128;
+      const ctx = canvas.getContext('2d');
+      ctx.font = 'Bold 28px Georgia, sans-serif';
+      ctx.fillStyle = '#ffeb3b';
+      ctx.textAlign = 'center';
+      ctx.shadowColor = '#ff9800';
+      ctx.shadowBlur = 12;
+      ctx.fillText(text, 256, 64);
+
+      const texture = new THREE.CanvasTexture(canvas);
+      const spriteMat = new THREE.SpriteMaterial({ map: texture, transparent: true });
+      const sprite = new THREE.Sprite(spriteMat);
+      sprite.scale.set(12, 3, 1);
+      return sprite;
     }
 
-    // Partículas creadas al hacer clic o tocar la pantalla
-    let clickSparks = [];
+    phrases.forEach((phrase, idx) => {
+      const sprite = createTextSprite(phrase);
+      const angle = (idx / phrases.length) * Math.PI * 2;
+      const radius = 14 + (idx % 2) * 3;
+      sprite.position.x = Math.cos(angle) * radius;
+      sprite.position.z = Math.sin(angle) * radius;
+      sprite.position.y = (Math.random() - 0.5) * 4;
+      phraseGroup.add(sprite);
+    });
 
+    // --- Explosión de Destellos Interactiva al Tocar ---
+    const sparkParticles = [];
     function createSparks(x, y) {
-      for (let i = 0; i < 25; i++) {
-        const angle = Math.random() * Math.PI * 2;
-        const speed = Math.random() * 5 + 1;
-        clickSparks.push({
-          x: x,
-          y: y,
-          vx: Math.cos(angle) * speed,
-          vy: Math.sin(angle) * speed,
-          size: Math.random() * 3 + 1.5,
-          alpha: 1,
-          decay: Math.random() * 0.03 + 0.015,
-          color: Math.random() > 0.3 ? '#ffd700' : '#ffffff'
+      const mouseVec = new THREE.Vector3(
+        (x / window.innerWidth) * 2 - 1,
+        -(y / window.innerHeight) * 2 + 1,
+        0.5
+      );
+      mouseVec.unproject(camera);
+      const dir = mouseVec.sub(camera.position).normalize();
+      const distance = -camera.position.z / dir.z;
+      const pos = camera.position.clone().add(dir.multiplyScalar(distance));
+
+      for (let i = 0; i < 20; i++) {
+        const pGeo = new THREE.SphereGeometry(0.15 + Math.random() * 0.1, 8, 8);
+        const pMat = new THREE.MeshBasicMaterial({
+          color: Math.random() > 0.5 ? 0xffff00 : 0xff9800,
+          transparent: true,
+          opacity: 1
         });
+        const p = new THREE.Mesh(pGeo, pMat);
+        p.position.copy(pos);
+        p.velocity = new THREE.Vector3(
+          (Math.random() - 0.5) * 0.8,
+          (Math.random() - 0.5) * 0.8,
+          (Math.random() - 0.5) * 0.8
+        );
+        scene.add(p);
+        sparkParticles.push(p);
       }
     }
 
     window.addEventListener('pointerdown', (e) => {
-      createSparks(e.clientX, e.clientY);
+      if (e.target.tagName !== 'BUTTON' && !e.target.closest('.modal')) {
+        createSparks(e.clientX, e.clientY);
+      }
     });
 
-    // Generador de música de fondo suave en bucle mediante Web Audio API
-    let audioCtx = null;
+    // --- Reproducción de Música ---
+    const musicBtn = document.getElementById('music-btn');
+    const bgMusic = document.getElementById('bg-music');
+    const musicIcon = document.getElementById('music-icon');
+    const musicText = document.getElementById('music-text');
     let isPlaying = false;
-    let musicInterval = null;
-
-    const notes = [261.63, 329.63, 392.00, 493.88, 523.25, 587.33, 659.25]; // Escala Armónica C Major 7
-
-    function playNote() {
-      if (!audioCtx || !isPlaying) return;
-      
-      try {
-        const osc = audioCtx.createOscillator();
-        const gain = audioCtx.createGain();
-        
-        const note = notes[Math.floor(Math.random() * notes.length)];
-        osc.type = 'sine';
-        osc.frequency.setValueAtTime(note, audioCtx.currentTime);
-        
-        gain.gain.setValueAtTime(0.001, audioCtx.currentTime);
-        gain.gain.exponentialRampToValueAtTime(0.08, audioCtx.currentTime + 0.4);
-        gain.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + 2.5);
-        
-        osc.connect(gain);
-        gain.connect(audioCtx.destination);
-        
-        osc.start();
-        osc.stop(audioCtx.currentTime + 2.6);
-      } catch(e) {}
-    }
-
-    const musicBtn = document.getElementById('musicBtn');
-    const musicIcon = document.getElementById('musicIcon');
-    const musicText = document.getElementById('musicText');
 
     musicBtn.addEventListener('click', () => {
-      if (!audioCtx) {
-        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-      }
-
-      if (audioCtx.state === 'suspended') {
-        audioCtx.resume();
-      }
-
-      isPlaying = !isPlaying;
-
-      if (isPlaying) {
-        musicIcon.textContent = '🎶';
-        musicText.textContent = 'Música: On';
-        musicBtn.style.background = 'rgba(255, 215, 0, 0.4)';
-        musicInterval = setInterval(playNote, 400);
+      if (!isPlaying) {
+        bgMusic.play().then(() => {
+          isPlaying = true;
+          musicIcon.textContent = '⏸️';
+          musicText.textContent = 'Pausar Música';
+        }).catch(err => {
+          alert("Asegúrate de haber subido el archivo musica.mp3 a GitHub.");
+        });
       } else {
+        bgMusic.pause();
+        isPlaying = false;
         musicIcon.textContent = '🎵';
-        musicText.textContent = 'Música de Fondo';
-        musicBtn.style.background = 'rgba(255, 215, 0, 0.12)';
-        clearInterval(musicInterval);
+        musicText.textContent = 'Reproducir Música';
       }
     });
 
-    // Control de Modal
-    const letterModal = document.getElementById('letterModal');
-    const cardBtn = document.getElementById('cardBtn');
-    const closeModal = document.getElementById('closeModal');
+    // --- Modal / Carta ---
+    const letterBtn = document.getElementById('letter-btn');
+    const letterModal = document.getElementById('letter-modal');
+    const closeModal = document.getElementById('close-modal');
 
-    cardBtn.addEventListener('click', () => letterModal.classList.add('active'));
+    letterBtn.addEventListener('click', () => letterModal.classList.add('active'));
     closeModal.addEventListener('click', () => letterModal.classList.remove('active'));
 
-    let globalTime = 0;
+    // --- Bucle de Animación 3D ---
+    let clock = new THREE.Clock();
 
     function animate() {
-      globalTime += 0.015;
-
-      // Limpieza con rastro brillante
-      ctx.fillStyle = 'rgba(3, 1, 8, 0.25)';
-      ctx.fillRect(0, 0, width, height);
-
-      // 1. Dibujar Polvo Dorado de Fondo
-      dustParticles.forEach(p => {
-        p.x += p.vx;
-        p.y += p.vy;
-
-        if (p.x < 0) p.x = width;
-        if (p.x > width) p.x = 0;
-        if (p.y < 0) p.y = height;
-        if (p.y > height) p.y = 0;
-
-        p.alpha += Math.sin(globalTime * p.twinkleSpeed) * 0.02;
-        const currentAlpha = Math.max(0.1, Math.min(0.9, p.alpha));
-
-        ctx.beginPath();
-        ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
-        ctx.fillStyle = `rgba(255, 223, 100, ${currentAlpha})`;
-        ctx.shadowBlur = 6;
-        ctx.shadowColor = '#ffd700';
-        ctx.fill();
-        ctx.shadowBlur = 0;
-      });
-
-      // 2. Dibujar Corazón Latente Mágico
-      const heartPulse = Math.sin(globalTime * 2.5) * 0.08 + 1; // Latido continuo
-      const centerY = height * 0.28;
-
-      heartParticles.forEach(p => {
-        // Calcular posición escalada por el latido
-        const dx = p.baseX - width / 2;
-        const dy = p.baseY - centerY;
-        
-        p.x = width / 2 + dx * heartPulse;
-        p.y = centerY + dy * heartPulse;
-
-        const alpha = Math.sin(globalTime * 2 + p.pulseOffset) * 0.3 + 0.7;
-
-        ctx.beginPath();
-        ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
-        ctx.fillStyle = `rgba(255, 215, 0, ${alpha})`;
-        ctx.shadowBlur = 10;
-        ctx.shadowColor = '#ffa500';
-        ctx.fill();
-        ctx.shadowBlur = 0;
-      });
-
-      // 3. Dibujar Galaxia 3D Interactiva de Flores y Frases
-      const galaxyCenterX = width / 2;
-      const galaxyCenterY = height * 0.65; // Parte inferior central
-      const tilt = 0.35; // Inclinación en perspectiva 3D
-
-      // Ordenar por Z para profundidad de campo (profundidad 3D)
-      galaxyItems.sort((a, b) => Math.sin(a.angle) - Math.sin(b.angle));
-
-      galaxyItems.forEach(item => {
-        item.angle += item.speed;
-
-        // Coordenadas con perspectiva elíptica
-        const x3d = Math.cos(item.angle) * item.radius;
-        const z3d = Math.sin(item.angle) * item.radius;
-        const y3d = z3d * tilt + item.yOffset;
-
-        const screenX = galaxyCenterX + x3d;
-        const screenY = galaxyCenterY + y3d;
-
-        // Escala basada en la profundidad (Z)
-        const depthScale = ((z3d + item.radius) / (item.radius * 2)) * 0.5 + 0.6;
-        const opacity = Math.max(0.2, Math.min(1, depthScale));
-
-        ctx.save();
-        ctx.translate(screenX, screenY);
-        ctx.globalAlpha = opacity;
-
-        if (item.type === 'phrase') {
-          // Renderizar Frase Brillante
-          const fontSize = Math.floor(13 * depthScale * item.scale);
-          ctx.font = `800 ${fontSize}px 'Montserrat', sans-serif`;
-          ctx.textAlign = 'center';
-          ctx.fillStyle = '#fff6bd';
-          ctx.shadowBlur = 12 * depthScale;
-          ctx.shadowColor = '#ffd700';
-          ctx.fillText(item.content, 0, 0);
-        } else {
-          // Renderizar Flor / Ramillete
-          const size = 36 * depthScale * item.scale;
-          let imgToDraw = imgSunflower;
-          if (item.type === 'bouquet') imgToDraw = imgBouquet;
-          if (item.type === 'rose') imgToDraw = imgRose;
-
-          ctx.shadowBlur = 15 * depthScale;
-          ctx.shadowColor = '#ffb300';
-          ctx.drawImage(imgToDraw, -size / 2, -size / 2, size, size);
-        }
-
-        ctx.restore();
-      });
-
-      // 4. Dibujar Destellos al Tocar la Pantalla
-      clickSparks.forEach((spark, index) => {
-        spark.x += spark.vx;
-        spark.y += spark.vy;
-        spark.alpha -= spark.decay;
-
-        if (spark.alpha <= 0) {
-          clickSparks.splice(index, 1);
-        } else {
-          ctx.beginPath();
-          ctx.arc(spark.x, spark.y, spark.size, 0, Math.PI * 2);
-          ctx.fillStyle = spark.color;
-          ctx.globalAlpha = spark.alpha;
-          ctx.shadowBlur = 8;
-          ctx.shadowColor = '#ffd700';
-          ctx.fill();
-          ctx.globalAlpha = 1;
-          ctx.shadowBlur = 0;
-        }
-      });
-
       requestAnimationFrame(animate);
+      const time = clock.getElapsedTime();
+
+      // Rotación de la Galaxia
+      galaxy.rotation.y = time * 0.05;
+
+      // Latido del Corazón
+      const scale = 2.5 + Math.sin(time * 3) * 0.15;
+      heartMesh.scale.set(scale, scale, scale);
+      heartMesh.rotation.y = Math.sin(time * 0.8) * 0.3;
+
+      // Rotación de las frases
+      phraseGroup.rotation.y = -time * 0.08;
+
+      // Animación de destellos lanzados
+      for (let i = sparkParticles.length - 1; i >= 0; i--) {
+        const p = sparkParticles[i];
+        p.position.add(p.velocity);
+        p.material.opacity -= 0.02;
+        if (p.material.opacity <= 0) {
+          scene.remove(p);
+          sparkParticles.splice(i, 1);
+        }
+      }
+
+      renderer.render(scene, camera);
     }
 
-    // Iniciar animación al cargar la página
-    window.onload = () => {
-      animate();
-    };
+    animate();
+
+    // Redimensionar al ajustar pantalla
+    window.addEventListener('resize', () => {
+      camera.aspect = window.innerWidth / window.innerHeight;
+      camera.updateProjectionMatrix();
+      renderer.setSize(window.innerWidth, window.innerHeight);
+    });
   </script>
 </body>
 </html>
